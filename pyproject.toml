@@ -1,97 +1,67 @@
-
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-# pip install nanowakeword
-name = "nanowakeword"
-
-version = "2.0.1"
-authors = [
-  { name="Arcosoph", email="a5tkabid@gmail.com" },
-]
-description = "A next-generation intelligent framework for efficiently training high-performance, custom wake word models."
-
+name = "nanobuddy"
+version = "0.1.0"
+description = "Lightweight wake word detection — streaming inference, training, and tooling."
 readme = "README.md"
-requires-python = ">=3.8"
-
+requires-python = ">=3.10"
 license = "Apache-2.0"
 
-keywords = ["wakeword", "keyword-spotting", "classification", "kws", "speech-recognition", "nanowakeword" ]
-
-classifiers = [
-    "Development Status :: 4 - Beta",
-    "Intended Audience :: Developers",
-    "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
-    "Topic :: Scientific/Engineering :: Artificial Intelligence",
-    "Topic :: Software Development :: Libraries :: Python Modules",
-]
-
 dependencies = [
-    "numpy>=2.0, <3.0",
-    "onnxruntime>=1.15, <2.0",
-
+    "numpy",
+    "onnxruntime",
 ]
 
 [project.optional-dependencies]
-
+detect = ["sounddevice"]
 train = [
-    # --- Critical Libraries ---
-    # When you test with 2.9+, you can change this to <3.0.
-    "torch>=2.8, <2.9",
-    "torchaudio>=2.8, <2.9",
-   
-    # --- Important ML/Data Libraries ---
-    "scipy>=1.11, <2.0", # v1.11 is a good stable baseline for Python 3.10+
-    "scikit-learn>=1.3, <2.0",
-    "onnx>=1.14, <2.0",
-
-    # --- Audio Processing ---
-    "acoustics>=0.2.3, <0.3",
-    "librosa>=0.10, <1.0", # v0.10 is a solid baseline for Python 3.10+
-    "pydub>=0.25, <1.0",
-    "audiomentations>=0.30, <1.0",
-    "torch_audiomentations>=0.11, <1.0",
-    "soundfile>=0.12, <1.0",
-    "mutagen>=1.46, <2.0",
-
-    # --- TTS & Phonemization ---
-    "phonemize>=0.2, <1.0", 
-    "pronouncing>=0.2, <1.0",
-    "sounddevice>=0.4.6, <1.0",
-    
-    # --- Utilities ---
-    "PyYAML>=6.0, <7.0",
-    "rich>=13.0, <14.0",
-    "tqdm>=4.64, <5.0",
-    "matplotlib>=3.7, <4.0",
-    "torchinfo>=1.8, <2.0",
-    "torchmetrics>=1.3, <2.0", # v1.3+ is compatible with recent torch versions
-    "psutil", # Generally safe to not pin
-    "requests>=2.28, <3.0"
+    "torch>=2.2",
+    "torchaudio>=2.2",
+    "onnx",
+    "scipy",
+    "pyyaml",
+    "audiomentations",
+    "torch-audiomentations",
+    "librosa",
+    "numba>=0.59",
+    "soundfile",
+    "tqdm",
+    "matplotlib",
+    "torchinfo",
+    "torchmetrics",
+    "psutil",
+    "scikit-learn",
+]
+tools = [
+    "nanobuddy[train,detect]",
+    "click>=8",
+    "pronouncing",
+    "faster-whisper",
+    "datasets",
+    "huggingface-hub",
+    "rich",
+    "requests",
+]
+dev = [
+    "pytest",
+    "pyyaml",
 ]
 
-
 [project.urls]
-"Homepage" = "https://github.com/arcosoph/nanowakeword"
-"Bug Tracker" = "https://github.com/arcosoph/nanowakeword/issues"
-
-[tool.setuptools]
-
-include-package-data = true
-
-[tool.setuptools.packages.find]
-
-where = ["."]
-include = ["nanowakeword*"] # nanowakeword 
+Homepage = "https://github.com/arcosoph/nanowakeword"
 
 [project.scripts]
-nanowakeword-train = "nanowakeword.trainer:train"
+nanobuddy = "nanobuddy.tools.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["nanobuddy*"]
+
+[tool.setuptools.package-data]
+"nanobuddy.models.mel_spectrogram" = ["*.onnx"]
+"nanobuddy.models.embedding" = ["*.onnx"]
+"nanobuddy.models.vad" = ["*.onnx"]
+"nanobuddy.models.wake_word" = ["*.onnx", "*.pt"]
