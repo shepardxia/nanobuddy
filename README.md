@@ -55,4 +55,4 @@ nanobuddy evaluate --model m.onnx --positive-dir pos/ --negative-dir neg/
 
 ## License
 
-Apache 2.0
+MIT
